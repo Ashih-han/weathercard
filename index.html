@@ -3,183 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./scr/card.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Document</title>
-    <style>
-        *{
-            box-sizing: border-box;
-        }
-
-        .my-main{
-            min-height:100vh ;
-            /* height: 100vh; */
-            background-color: skyblue;
-            padding: 5% 10%;
-            /* overflow: hidden; */
-        }
-
-        /* .row .col-auto div{
-            background-color: darkblue;
-            border: 5px solid transparent;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            color: white;
-            height:280px;
-            width: 200px;
-        } */
-
-    </style>
+    <title>天氣卡</title>
 </head>
 <body>
-    <main class="my-main">
-        <h5 class="mb-4">36小時天氣預報</h5>
-        <div class="btn-section mb-4">
-            <button type="button" class="btn btn-primary show_city me-1" data-area="全部">全部</button>
-            <button type="button" class="btn btn-light show_city me-1" data-area="北部">北部</button>
-            <button type="button" class="btn btn-light show_city me-1" data-area="中部">中部</button>
-            <button type="button" class="btn btn-light show_city me-1" data-area="南部">南部</button>
-            <button type="button" class="btn btn-light show_city me-1" data-area="東部">東部</button>
-            <button type="button" class="btn btn-light show_city" data-area="離島">離島</button>
+    <main class="bg mask">
+        <div class="my-title" style="height:300px">
+            <img src="./scr/img/cloud1.png" alt="">
+            <div class="title-text"">
+                <h1>天氣卡</h1>
+                <div class="show-time"></div>
+            </div>
         </div>
-        <!-- space between -->
-        <div id="show_weather" class="row g-4">
-            <div class="col-auto">
-                <div class="card" style="width: 14rem;" data-aos="zoom-in-up">
-                    <div class="card-body">
-                      <h5 class="card-title">嘉義市</h5>
-                      <h6 class="card-subtitle mb-2 text-body-secondary">天氣現象</h6>
-                      <div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group" style="width: 100%;">
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="btnradio1">now</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btnradio2">24hr</label>
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btnradio3">36hr</label>
-                      </div>
-                      <p class="card-text"><span>最低溫度</span> - <span>最高溫度</span></p>
-                      <p class="card-text">降雨機率</p>
-                      <p class="card-text">舒適度</p>
-                    </div>
-                </div>
-            </div> 
+        <div class="my-main">
+            <!-- <h5 class="mb-4">36小時天氣預報</h5> -->
+            <div class="btn-section mb-5">
+                <button type="button" class="my-btn show_city me-3" data-area="全部">全部</button>
+                <button type="button" class="my-btn show_city me-3" data-area="北部">北部</button>
+                <button type="button" class="my-btn show_city me-3" data-area="中部">中部</button>
+                <button type="button" class="my-btn show_city me-3" data-area="南部">南部</button>
+                <button type="button" class="my-btn show_city me-3" data-area="東部">東部</button>
+                <button type="button" class="my-btn show_city" data-area="離島">離島</button>
+            </div>
+            <div id="show_weather" class="grid gap-3 justify-content-center"></div>
         </div>
-        
     </main>    
     
-    <script>
-        //天氣卡片2， 9:54
-        callfetch();
-        function callfetch(){
-            fetch("https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-A69462BC-CE74-46CD-8C9B-04DDB7B97552")
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (item) {
-                console.log('回傳的東西',item); // 確認回傳的資料結構
-                let data = item.records.location;
-                let datafilter = data.filter((data) => locationName["全部"].includes(data.locationName));
-                console.log('過濾後的資料', datafilter); // 確認過濾後的資料
-                btns(data);
-                showwaether(datafilter);
-            });
-        };
-        
-        let locationName = {
-            '全部':["臺北市","新北市","基隆市","新竹市","桃園市","新竹縣","宜蘭縣","臺中市","苗栗縣","彰化縣","南投縣","雲林縣","高雄市","臺南市","嘉義市","嘉義縣","屏東縣","澎湖縣","花蓮縣","臺東縣","金門縣","連江縣"],
-            '北部':["臺北市","新北市","基隆市","新竹市","桃園市","新竹縣","宜蘭縣"],
-            '中部':["臺中市","苗栗縣","彰化縣","南投縣","雲林縣"],
-            '南部':["高雄市","臺南市","嘉義市","嘉義縣","屏東縣","澎湖縣"],
-            '東部':["花蓮縣","臺東縣"],
-            '離島':["金門縣","連江縣"]
-        };
-        
-
-        //綁定按鈕事件
-        //its=data，可以不用用同一個代號，在fetch內將資料傳回function內就可以
-        function btns(data) {
-            document.querySelectorAll('.show_city').forEach((item) => {
-                item.addEventListener(('click'),function(){
-                    let city_area = item.dataset.area;//按鈕上的data-area辨別
-                    let btnCityFilter = data.filter((data) => locationName[city_area].includes(data.locationName));
-                    //console.log('按鈕過濾後的資料', btnCityFilter); // 確認按鈕過濾後的資料
-                    showwaether(btnCityFilter);
-                });
-            });
-        };
-        
-        // 專注產生資料呈現
-        function showwaether(datafilter) {
-            let show_weather = document.querySelector('#show_weather');
-            show_weather.innerHTML = '';
-            console.log('專注資料呈現',datafilter)
-            // 資料產生出來
-            datafilter.forEach((data) => {
-                console.log(data);
-                show_weather.innerHTML += `
-                <div class="col-auto">
-                    <div class="card" style="width: 14rem;" data-aos="zoom-in-up">
-                        <div class="card-body">
-                        <h5 class="card-title">${data.locationName}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">${data.weatherElement[0].time[0].parameter.parameterName}</h6>               
-                        <p class="card-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
-                            <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
-                            <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
-                            </svg>
-                            <span>${data.weatherElement[2].time[0].parameter.parameterName}°C</span> - <span>${data.weatherElement[4].time[0].parameter.parameterName}°C</span></p>
-                        <p class="card-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-umbrella" viewBox="0 0 16 16">
-                                <path d="M8 0a.5.5 0 0 1 .5.5v.514C12.625 1.238 16 4.22 16 8c0 0 0 .5-.5.5-.149 0-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394A3.17 3.17 0 0 0 13 7.5c-.638 0-1.178.213-1.564.434a3.5 3.5 0 0 0-.555.394l-.025.023-.003.003s-.204.146-.353.146-.352-.145-.352-.145l-.004-.004-.025-.023a3.5 3.5 0 0 0-.555-.394 3.3 3.3 0 0 0-1.064-.39V13.5H8h.5v.039l-.005.083a3 3 0 0 1-.298 1.102 2.26 2.26 0 0 1-.763.88C7.06 15.851 6.587 16 6 16s-1.061-.148-1.434-.396a2.26 2.26 0 0 1-.763-.88 3 3 0 0 1-.302-1.185v-.025l-.001-.009v-.003s0-.002.5-.002h-.5V13a.5.5 0 0 1 1 0v.506l.003.044a2 2 0 0 0 .195.726c.095.191.23.367.423.495.19.127.466.229.879.229s.689-.102.879-.229c.193-.128.328-.304.424-.495a2 2 0 0 0 .197-.77V7.544a3.3 3.3 0 0 0-1.064.39 3.5 3.5 0 0 0-.58.417l-.004.004S5.65 8.5 5.5 8.5s-.352-.145-.352-.145l-.004-.004a3.5 3.5 0 0 0-.58-.417A3.17 3.17 0 0 0 3 7.5c-.638 0-1.177.213-1.564.434a3.5 3.5 0 0 0-.58.417l-.004.004S.65 8.5.5 8.5C0 8.5 0 8 0 8c0-3.78 3.375-6.762 7.5-6.986V.5A.5.5 0 0 1 8 0M6.577 2.123c-2.833.5-4.99 2.458-5.474 4.854A4.1 4.1 0 0 1 3 6.5c.806 0 1.48.25 1.962.511a9.7 9.7 0 0 1 .344-2.358c.242-.868.64-1.765 1.271-2.53m-.615 4.93A4.16 4.16 0 0 1 8 6.5a4.16 4.16 0 0 1 2.038.553 8.7 8.7 0 0 0-.307-2.13C9.434 3.858 8.898 2.83 8 2.117c-.898.712-1.434 1.74-1.731 2.804a8.7 8.7 0 0 0-.307 2.131zm3.46-4.93c.631.765 1.03 1.662 1.272 2.53.233.833.328 1.66.344 2.358A4.14 4.14 0 0 1 13 6.5c.77 0 1.42.23 1.897.477-.484-2.396-2.641-4.355-5.474-4.854z"/>
-                            </svg>
-                            ${data.weatherElement[1].time[0].parameter.parameterName}%
-                        </p>
-                        <p class="card-text">${data.weatherElement[3].time[0].parameter.parameterName}</p>
-                        </div>
-                    </div>
-                </div>
-                `;
-            });
-            AOS.init();
-        }
-
-    </script>
+    <script src="./js/index.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-        // if(item.dataset.area == '全部'){
-                    //     //過濾資料：判斷data跟自己寫的目錄(locationName)是否相同
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // }else if(item.dataset.area == '北部'){
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // }else if(item.dataset.area == '中部'){
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // }else if(item.dataset.area == '南部'){
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // }else if(item.dataset.area == '東部'){
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // }else if(item.dataset.area == '離島'){
-                    //     let datafilter = its.filter((datafilter) => locationName[city_area].includes(datafilter.locationName));
-                    //     console.log(datafilter);
-                    // };
-        // function(){
-        //     北部區域：包括臺北市、新北市、基隆市、新竹市、桃園市、新竹縣及宜蘭縣。
-        //     中部區域：包括臺中市、苗栗縣、彰化縣、南投縣及雲林縣。
-        //     南部區域：包括高雄市、臺南市、嘉義市、嘉義縣、屏東縣及澎湖縣。
-        //     東部區域：包括花蓮縣及臺東縣。
-        //     福建省：包括金門縣與連江縣
-        //     let allcity = ["嘉義縣", "新北市", "嘉義市", "新竹縣", "新竹市", "臺北市", "臺南市", "宜蘭縣", "苗栗縣", "雲林縣", "花蓮縣", "臺中市", "臺東縣", "桃園市", "南投縣", "高雄市", "金門縣", "屏東縣", "基隆市", "澎湖縣", "彰化縣", "連江縣",];
-        //     let northcity = ["新北市", "新竹縣", "新竹市", "臺北市", "宜蘭縣", "桃園市", "基隆市",];
-        //     let midcity = ["苗栗縣", "雲林縣", "臺中市", "南投縣", "彰化縣",];
-        //     let southcity = ["嘉義縣", "嘉義市", "臺南市", "高雄市", "屏東縣",];
-        //     let eastcity = ["臺東縣", "花蓮縣",];
-        //     let outcity = ["澎湖縣", "金門縣", "連江縣",];
-        // };
-    </script>
+    <script>AOS.init();</script>
 </body>
 </html>
